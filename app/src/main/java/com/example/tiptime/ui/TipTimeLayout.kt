@@ -3,6 +3,9 @@ package com.example.tiptime.ui
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.viewmodels.TipTimeViewModel
 import com.example.tiptime.R
 import androidx.compose.material3.Icon
-
-
-
-
 
 @Composable
 fun TipTimeLayout(
