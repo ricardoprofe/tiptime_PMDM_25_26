@@ -1,12 +1,22 @@
 package com.example.tiptime.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,18 +28,29 @@ import com.example.tiptime.R
 
 @Composable
 fun TipTimeResultScreen(
-    tipTimeViewModel: TipTimeViewModel = viewModel(),
     onBackButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tipTimeViewModel: TipTimeViewModel = viewModel(),
 ) {
     val tipTimeUiState by tipTimeViewModel.uiState.collectAsState()
-    // PILLA el state de las 2 maneras
 
     Column(
         modifier = modifier
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .safeDrawingPadding(),
+        horizontalAlignment = Alignment.Companion.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(R.string.tip_amount, tipTimeUiState.tip))
-        Text(text = stringResource(R.string.total, tipTimeUiState.total))
+        Text(
+            text = stringResource(R.string.tip_amount, tipTimeUiState.tip),
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Text(
+            text = stringResource(R.string.total, tipTimeUiState.total),
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = onBackButtonClicked,
         ) {
@@ -38,3 +59,10 @@ fun TipTimeResultScreen(
     }
 }
 
+@Preview
+@Composable
+fun ResultPreview(){
+    TipTimeResultScreen(
+        onBackButtonClicked = {  }
+    )
+}

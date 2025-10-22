@@ -30,9 +30,9 @@ import com.example.tiptime.viewmodels.TipTimeViewModel
 
 @Composable
 fun TipTimeStartScreen(
-    tipTimeViewModel: TipTimeViewModel = viewModel(),
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tipTimeViewModel: TipTimeViewModel = viewModel(),
 ) {
     val tipTimeUiState by tipTimeViewModel.uiState.collectAsState()
 
@@ -85,6 +85,7 @@ fun TipTimeStartScreen(
             text = stringResource(R.string.tip_amount, tipTimeUiState.tip),
             style = MaterialTheme.typography.displaySmall
         )
+        Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = onNextButtonClicked,
         ) {
