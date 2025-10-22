@@ -33,6 +33,7 @@ class TipTimeViewModel : ViewModel() {
             currentState.copy(amountInput = newAmount)
         }
         calculateTip() // Recalculate the tip each time the amount changes
+
     }
 
     /**
@@ -74,12 +75,18 @@ class TipTimeViewModel : ViewModel() {
         if (roundUp) {
             tip = ceil(tip)
         }
+        val total = amount + tip //NEW
 
         val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
+        val formattedTotal = NumberFormat.getCurrencyInstance().format(total) //NEW
 
         // Update the state with the calculated tip
         _uiState.update { currentState ->
-            currentState.copy(tip = formattedTip)
+            currentState.copy(
+                tip = formattedTip,
+                total = formattedTotal //NEW
+            )
         }
     }
+
 }

@@ -74,6 +74,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+    implementation("androidx.navigation:navigation-compose:2.9.5")
+    implementation("androidx.compose.material3:material3:1.4.0")
 // Use the latest version
 
     testImplementation("junit:junit:4.13.2")
