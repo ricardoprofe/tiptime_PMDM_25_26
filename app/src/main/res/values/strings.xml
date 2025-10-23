@@ -25,4 +25,7 @@
     <string name="tip_result">Tip Result</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="tip_amount_total_bill">Tip Amount: %1$s\nTotal Bill: %2$s</string>
+    <string name="your_tip">Your tip</string>
+    <string name="share">Share</string>
 </resources>

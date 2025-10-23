@@ -1,11 +1,13 @@
 package com.example.tiptime.ui
 
-import android.graphics.drawable.Icon
+import android.content.Context
+import android.content.Intent
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,21 +30,35 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.viewmodels.TipTimeViewModel
 import com.example.tiptime.R
 import androidx.compose.material3.Icon
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun TipTimeLayout(
     tipTimeViewModel: TipTimeViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
+    // Get current back stack entry
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen
+    val currentScreen = Routes.valueOf(
+        backStackEntry?.destination?.route ?: Routes.Start.name
+    )
+
+    val context = LocalContext.current
+    val uiState by tipTimeViewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TipTimeTopBar(
-                currentScreen = TODO(),
-                canNavigateBack = TODO()
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                showShare = currentScreen == Routes.TipResult,
+                onShareClicked = { createShareIntent(context, tip = uiState.tip, total = uiState.total) }
             )
         }
     ) { innerPadding ->
-        //val tipTimeUiState by tipTimeViewModel.uiState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -79,6 +95,8 @@ fun TipTimeTopBar(
     canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit = {},
+    showShare: Boolean = false,
+    onShareClicked: () -> Unit = {},
 ) {
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
@@ -90,11 +108,38 @@ fun TipTimeTopBar(
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)
+                    )
+                }
+            }
+        },
+        actions = {
+            if (showShare) {
+                IconButton(onClick = onShareClicked) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = "Share"
                     )
                 }
             }
         }
     )
+}
+
+private fun createShareIntent(context: Context, tip: String, total: String) {
+    val shareText = context.getString(R.string.tip_amount_total_bill, tip, total)
+    // Create an ACTION_SEND implicit intent with order details in the intent extras
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.your_tip))
+        putExtra(Intent.EXTRA_TEXT, shareText)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.getString(R.string.your_tip)
+        )
+    )
+
 }
