@@ -1,9 +1,5 @@
 package com.example.tiptime.viewmodels
 
-import androidx.compose.animation.core.copy
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,7 +61,7 @@ class TipTimeViewModel : ViewModel() {
      * according to the local currency.
      * Example would be "$10.00".
      */
-    private fun calculateTip(): Unit {
+    private fun calculateTip() {
         // Get the current values from the sate
         val amount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0
         val tipPercent = _uiState.value.tipInput.toDoubleOrNull() ?: 15.0

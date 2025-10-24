@@ -25,7 +25,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.R
-import com.example.tiptime.viewmodels.TipTimeState
 import com.example.tiptime.viewmodels.TipTimeViewModel
 
 @Composable

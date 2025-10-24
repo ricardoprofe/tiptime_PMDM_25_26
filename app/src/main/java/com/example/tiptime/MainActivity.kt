@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.example.tiptime.ui.TipTimeLayout
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
