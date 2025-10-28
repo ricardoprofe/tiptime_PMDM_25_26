@@ -77,6 +77,7 @@ fun TipTimeLayout(
                 TipTimeResultScreen(
                     tipTimeViewModel = tipTimeViewModel,
                     onBackButtonClicked = { navController.navigate(Routes.Start.name) },
+                    //onBackButtonClicked = { navController.navigateUp() }, //This works better in this case
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp)
@@ -117,7 +118,7 @@ fun TipTimeTopBar(
                 IconButton(onClick = onShareClicked) {
                     Icon(
                         imageVector = Icons.Filled.Share,
-                        contentDescription = "Share"
+                        contentDescription = stringResource(R.string.share)
                     )
                 }
             }
@@ -125,6 +126,9 @@ fun TipTimeTopBar(
     )
 }
 
+/**
+ * Create an intent to share the tip and total amount
+ */
 private fun createShareIntent(context: Context, tip: String, total: String) {
     val shareText = context.getString(R.string.tip_amount_total_bill, tip, total)
     // Create an ACTION_SEND implicit intent with order details in the intent extras
@@ -139,5 +143,4 @@ private fun createShareIntent(context: Context, tip: String, total: String) {
             context.getString(R.string.your_tip)
         )
     )
-
 }
