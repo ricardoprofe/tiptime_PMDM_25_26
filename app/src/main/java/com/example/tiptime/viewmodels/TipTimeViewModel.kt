@@ -1,23 +1,39 @@
 package com.example.tiptime.viewmodels
 
+import android.app.Application
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
+import androidx.room.RoomDatabase
+import com.example.tiptime.data.TipRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.text.NumberFormat
 import kotlin.math.ceil
+import com.example.tiptime.data.Tip
+import com.example.tiptime.data.TipDatabase
 
 /**
  * ViewModel for the Tip Time app.
  */
-class TipTimeViewModel : ViewModel() {
+class TipTimeViewModel(application: Application, private val repository: TipRepository) : ViewModel() {
     //UI state
     private val _uiState = MutableStateFlow(TipTimeState())
     /**
      * The UI state for the Tip Time app.
      */
     val uiState : StateFlow<TipTimeState> = _uiState.asStateFlow()
+
+
+
+
+    init {
+        val db = TipDatabase.getDatabase(application).tipDao()
+        repo = repository(db)
+
+    }
+
 
     /**
      * Updates the amount input and recalculates the tip.
@@ -83,6 +99,15 @@ class TipTimeViewModel : ViewModel() {
                 total = formattedTotal //NEW
             )
         }
+    }
+
+    suspend fun saveTipCalculation() {
+        val tip = Tip(
+            billAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0,
+            tipPercentage = _uiState.value.tipInput.toIntOrNull() ?: 15,
+            roundUp = _uiState.value.roundUp
+        )
+           db.insertTip(tip)
     }
 
 }
