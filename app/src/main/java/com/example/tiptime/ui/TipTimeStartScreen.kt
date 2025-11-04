@@ -88,7 +88,7 @@ fun TipTimeStartScreen(
         Button(
             onClick = onNextButtonClicked,
         ) {
-            Text(stringResource(R.string.next))
+            Text(stringResource(R.string.save))
         }
         Spacer(modifier = Modifier.Companion.height(150.dp))
     }
