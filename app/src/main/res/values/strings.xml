@@ -29,4 +29,7 @@
     <string name="your_tip">Your tip</string>
     <string name="share">Share</string>
     <string name="save">Save</string>
+    <string name="edit_tip">Edit Tip</string>
+    <string name="no_tips_description">No tips in the list. Tap + to add</string>
+    <string name="tip_list">Tip List</string>
 </resources>

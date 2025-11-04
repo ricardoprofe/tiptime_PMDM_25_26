@@ -29,11 +29,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.R
+import com.example.tiptime.viewmodels.StartViewModel
 import com.example.tiptime.viewmodels.TipTimeViewModel
 
 @Composable
 fun TipTimeLayout(
     tipTimeViewModel: TipTimeViewModel = viewModel(),
+    startViewModel: StartViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     // Get current back stack entry
@@ -65,6 +67,15 @@ fun TipTimeLayout(
         ) {
             composable( route = Routes.Start.name) {
                 TipTimeStartScreen(
+                    startViewModel = startViewModel,
+                    onItemClick = { navController.navigate(Routes.EditTip.name)},
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(40.dp)
+                )
+            }
+            composable( route = Routes.EditTip.name) {
+                TipTimeEditScreen(
                     tipTimeViewModel = tipTimeViewModel,
                     onNextButtonClicked = {
                         tipTimeViewModel.saveTipCalculation()
