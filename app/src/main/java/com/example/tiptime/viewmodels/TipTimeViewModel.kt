@@ -16,6 +16,7 @@ import java.text.NumberFormat
 import kotlin.math.ceil
 import com.example.tiptime.data.Tip
 import com.example.tiptime.data.TipDatabase
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -28,6 +29,10 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
      * The UI state for the Tip Time app.
      */
     val uiState : StateFlow<TipTimeState> = _uiState.asStateFlow()
+
+    // Variable to hold the ID of the tip being edited
+    private var currentTipId: Int? = null
+
 
     private val tipRepository: TipRepository = TipRepository(
         TipDatabase.getDatabase(application).tipDao()
@@ -99,26 +104,50 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
+    fun loadTipById(tipId: Int) {
+        currentTipId = tipId
+        viewModelScope.launch {
+            // Fetch the tip from the repository
+            val tip = tipRepository.getTipById(tipId).firstOrNull()
+            tip?.let {
+                // Update the UI state with the fetched tip data
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        id = it.id,
+                        amountInput = it.billAmount.toString(),
+                        tipInput = it.tipPercentage.toString(),
+                        roundUp = it.roundUp
+                    )
+                }
+                // Recalculate tip and total for the loaded values
+                calculateTip()
+            }
+        }
+    }
+
     fun saveTipCalculation() {
         // Launch a coroutine in the ViewModel's scope
         viewModelScope.launch {
             val tip = Tip(
+                id = currentTipId ?: 0, // Use currentTipId if it exists, otherwise 0 for a new entry
                 billAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0,
                 tipPercentage = _uiState.value.tipInput.toIntOrNull() ?: 15,
                 roundUp = _uiState.value.roundUp
             )
             // Use the repository to insert the tip
-            tipRepository.insertTip(tip)
+            if (currentTipId == null || currentTipId == 0) {
+                tipRepository.insertTip(tip)
+            } else {
+                tipRepository.updateTip(tip)
+            }
         }
     }
 
-/*    suspend fun saveTipCalculation() {
-        val tip = Tip(
-            billAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0,
-            tipPercentage = _uiState.value.tipInput.toIntOrNull() ?: 15,
-            roundUp = _uiState.value.roundUp
-        )
-           db.insertTip(tip)
-    }*/
+    // Function to reset the state for a new tip entry
+    fun resetTip() {
+        currentTipId = null
+        _uiState.value = TipTimeState() // Reset to default state
+    }
+
 
 }

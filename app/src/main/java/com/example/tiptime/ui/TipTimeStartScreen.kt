@@ -41,7 +41,7 @@ fun TipTimeStartScreen(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
+        modifier = modifier.padding(top = 0.dp),
     ) {
         if (tipList.isEmpty()) {
             Text(

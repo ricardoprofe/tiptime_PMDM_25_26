@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,7 +33,17 @@ fun TipTimeEditScreen(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     tipTimeViewModel: TipTimeViewModel = viewModel(),
+    tipId: Int? = 0
 ) {
+    // Use LaunchedEffect to load the tip when the screen is first displayed
+    LaunchedEffect(tipId) {
+        if (tipId != null && tipId != 0) { // Assuming 0 is not a valid ID
+            tipTimeViewModel.loadTipById(tipId)
+        } else {
+            tipTimeViewModel.resetTip() // Optional: Clear fields for a new tip
+        }
+    }
+
     val tipTimeUiState by tipTimeViewModel.uiState.collectAsState()
 
     Column(
@@ -88,7 +99,13 @@ fun TipTimeEditScreen(
         Button(
             onClick = onNextButtonClicked,
         ) {
-            Text(stringResource(R.string.save))
+            // Change button text based on whether it's a new tip or an edit
+            val buttonText = if (tipId != null && tipId != 0) {
+                stringResource(R.string.update)
+            } else {
+                stringResource(R.string.save)
+            }
+            Text(buttonText)
         }
         Spacer(modifier = Modifier.Companion.height(150.dp))
     }

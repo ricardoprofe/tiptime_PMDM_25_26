@@ -68,7 +68,7 @@ fun TipTimeLayout(
             composable( route = Routes.Start.name) {
                 TipTimeStartScreen(
                     startViewModel = startViewModel,
-                    onItemClick = { navController.navigate(Routes.EditTip.name)},
+                    onItemClick = { navController.navigate(Routes.EditTip.name) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp)
@@ -81,6 +81,7 @@ fun TipTimeLayout(
                         tipTimeViewModel.saveTipCalculation()
                         navController.navigate(Routes.TipResult.name)
                     },
+                    tipId = uiState.id,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp)
