@@ -24,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tiptime.R
 import com.example.tiptime.viewmodels.StartViewModel
 import com.example.tiptime.viewmodels.TipTimeViewModel
@@ -40,10 +42,14 @@ fun TipTimeLayout(
 ) {
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    val currentScreen = Routes.valueOf(
-        backStackEntry?.destination?.route ?: Routes.Start.name
-    )
+    // Resolve a route string for the current entry (may include concrete id like "EditTip/3")
+    val currentRoute = backStackEntry?.destination?.route ?: Routes.Start.route
+    // Map the route string to our Routes enum, handling both plain and "withArg" patterns
+    val currentScreen = Routes.values().firstOrNull { r ->
+        currentRoute == r.route ||
+            currentRoute.startsWith(r.route + "/") ||
+            currentRoute == r.withArg()
+    } ?: Routes.Start
 
     val context = LocalContext.current
     val uiState by tipTimeViewModel.uiState.collectAsState()
@@ -62,35 +68,41 @@ fun TipTimeLayout(
 
         NavHost(
             navController = navController,
-            startDestination = Routes.Start.name,
+            startDestination = Routes.Start.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable( route = Routes.Start.name) {
+            composable(route = Routes.Start.route) {
                 TipTimeStartScreen(
                     startViewModel = startViewModel,
-                    onItemClick = { navController.navigate(Routes.EditTip.name) },
+                    // Navigate to EditTip with the selected tip id using the helper
+                    onItemClick = { id -> navController.navigate(Routes.EditTip.createRouteFor(id)) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp)
                 )
             }
-            composable( route = Routes.EditTip.name) {
+            // EditTip route now accepts a path parameter using the enum helper
+            composable(
+                route = Routes.EditTip.withArg(),
+                arguments = listOf(navArgument(Routes.TIP_ID_ARG) { type = NavType.IntType })
+            ) { backStackEntry ->
+                val tipId = backStackEntry.arguments?.getInt(Routes.TIP_ID_ARG) ?: 0
                 TipTimeEditScreen(
                     tipTimeViewModel = tipTimeViewModel,
                     onNextButtonClicked = {
                         tipTimeViewModel.saveTipCalculation()
-                        navController.navigate(Routes.TipResult.name)
+                        navController.navigate(Routes.TipResult.route)
                     },
-                    tipId = uiState.id,
+                    tipId = tipId,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp)
                 )
             }
-            composable(route = Routes.TipResult.name) {
+            composable(route = Routes.TipResult.route) {
                 TipTimeResultScreen(
                     tipTimeViewModel = tipTimeViewModel,
-                    onBackButtonClicked = { navController.navigate(Routes.Start.name) },
+                    onBackButtonClicked = { navController.navigate(Routes.Start.route) },
                     //onBackButtonClicked = { navController.navigateUp() }, //This works better in this case
                     modifier = Modifier
                         .fillMaxSize()

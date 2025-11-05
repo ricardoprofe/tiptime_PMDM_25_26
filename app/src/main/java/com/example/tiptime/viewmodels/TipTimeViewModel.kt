@@ -38,6 +38,8 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
         TipDatabase.getDatabase(application).tipDao()
     )
 
+
+
     /**
      * Updates the amount input and recalculates the tip.
      *
