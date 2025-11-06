@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,7 +46,7 @@ fun TipTimeLayout(
     // Resolve a route string for the current entry (may include concrete id like "EditTip/3")
     val currentRoute = backStackEntry?.destination?.route ?: Routes.Start.route
     // Map the route string to our Routes enum, handling both plain and "withArg" patterns
-    val currentScreen = Routes.values().firstOrNull { r ->
+    val currentScreen = Routes.entries.firstOrNull { r ->
         currentRoute == r.route ||
             currentRoute.startsWith(r.route + "/") ||
             currentRoute == r.withArg()
@@ -63,7 +64,21 @@ fun TipTimeLayout(
                 showShare = currentScreen == Routes.TipResult,
                 onShareClicked = { createShareIntent(context, tip = uiState.tip, total = uiState.total) }
             )
+        },
+        floatingActionButton = {
+            // Add a FAB only on the Start screen
+            if (currentScreen == Routes.Start) {
+                androidx.compose.material3.FloatingActionButton(
+                    onClick = { navController.navigate(Routes.EditTip.createRouteFor(0)) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.add_tip)
+                    )
+                }
+            }
         }
+
     ) { innerPadding ->
 
         NavHost(
@@ -78,7 +93,7 @@ fun TipTimeLayout(
                     onItemClick = { id -> navController.navigate(Routes.EditTip.createRouteFor(id)) },
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(40.dp)
+                        .padding(10.dp)
                 )
             }
             // EditTip route now accepts a path parameter using the enum helper
@@ -93,20 +108,20 @@ fun TipTimeLayout(
                         tipTimeViewModel.saveTipCalculation()
                         navController.navigate(Routes.TipResult.route)
                     },
+                    backNavigation = { navController.navigateUp() },
                     tipId = tipId,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(40.dp)
+                        .padding(10.dp)
                 )
             }
             composable(route = Routes.TipResult.route) {
                 TipTimeResultScreen(
                     tipTimeViewModel = tipTimeViewModel,
-                    onBackButtonClicked = { navController.navigate(Routes.Start.route) },
-                    //onBackButtonClicked = { navController.navigateUp() }, //This works better in this case
+                    onBackButtonClicked = { navController.navigate(Routes.Start.route) {popUpTo(0)} },
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(40.dp)
+                        .padding(10.dp)
                 )
             }
         }
@@ -170,3 +185,4 @@ private fun createShareIntent(context: Context, tip: String, total: String) {
         )
     )
 }
+

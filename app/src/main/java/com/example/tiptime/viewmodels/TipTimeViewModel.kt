@@ -1,23 +1,19 @@
 package com.example.tiptime.viewmodels
 
 import android.app.Application
-import androidx.activity.result.launch
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.RoomDatabase
+import com.example.tiptime.data.Tip
+import com.example.tiptime.data.TipDatabase
 import com.example.tiptime.data.TipRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import kotlin.math.ceil
-import com.example.tiptime.data.Tip
-import com.example.tiptime.data.TipDatabase
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Tip Time app.
@@ -145,11 +141,22 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
+    fun deleteTip() {
+        val tipId = currentTipId ?: return // If no current tip, do nothing
+        val tip = Tip(
+            id = tipId,
+            billAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0,
+            tipPercentage = _uiState.value.tipInput.toIntOrNull() ?: 15,
+            roundUp = _uiState.value.roundUp
+        )
+        viewModelScope.launch {
+            tipRepository.deleteTip(tip)
+        }
+    }
+
     // Function to reset the state for a new tip entry
     fun resetTip() {
         currentTipId = null
         _uiState.value = TipTimeState() // Reset to default state
     }
-
-
 }

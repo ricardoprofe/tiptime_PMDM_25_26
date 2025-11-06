@@ -33,4 +33,6 @@
     <string name="no_tips_description">No tips in the list. Tap + to add</string>
     <string name="tip_list">Tip List</string>
     <string name="update">Update</string>
+    <string name="add_tip">Add tip</string>
+    <string name="delete">Delete</string>
 </resources>

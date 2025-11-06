@@ -24,7 +24,7 @@ class StartViewModel(application: Application) : AndroidViewModel(application) {
         .map { StartUiState(it) }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
             initialValue = StartUiState()
         )
 

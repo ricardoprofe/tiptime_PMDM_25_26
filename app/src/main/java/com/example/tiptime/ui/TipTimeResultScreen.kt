@@ -36,7 +36,7 @@ fun TipTimeResultScreen(
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
             .safeDrawingPadding(),
-        horizontalAlignment = Alignment.Companion.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
