@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.R
 import com.example.tiptime.data.Tip
 import com.example.tiptime.viewmodels.StartViewModel
@@ -33,7 +32,7 @@ import com.example.tiptime.viewmodels.StartViewModel
 fun TipTimeStartScreen(
     onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    startViewModel: StartViewModel = viewModel(),
+    startViewModel: StartViewModel,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val uiState by startViewModel.uiState.collectAsState()
@@ -112,5 +111,6 @@ fun TipItem(
 @Preview(showBackground = true)
 @Composable
 fun StartScreenPreview() {
-    TipTimeStartScreen(onItemClick = {})
+    // Preview can't provide a ViewModel; use a lightweight preview variant if needed.
+    // TipTimeStartScreen(onItemClick = {})
 }
