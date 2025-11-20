@@ -38,9 +38,9 @@ fun TipTimeEditScreen(
     // Use LaunchedEffect to load the tip when the screen is first displayed
     LaunchedEffect(tipId) {
         if (tipId != null && tipId != 0) { // Assuming 0 is not a valid ID
-            tipTimeViewModel.loadTipById(tipId)
+            tipTimeViewModel.loadOrKeepTip(tipId)  //CHANGE THIS
         } else {
-            tipTimeViewModel.resetTip() // Optional: Clear fields for a new tip
+            //tipTimeViewModel.resetTip() // DELETE THIS
         }
     }
 

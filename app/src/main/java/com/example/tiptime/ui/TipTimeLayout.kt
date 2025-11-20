@@ -69,7 +69,10 @@ fun TipTimeLayout(
             // Add a FAB only on the Start screen
             if (currentScreen == Routes.Start) {
                 androidx.compose.material3.FloatingActionButton(
-                    onClick = { navController.navigate(Routes.EditTip.createRouteFor(0)) }
+                    onClick = {
+                        tipTimeViewModel.resetTip() //ADD THIS
+                        navController.navigate(Routes.EditTip.createRouteFor(0))
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -118,7 +121,10 @@ fun TipTimeLayout(
             composable(route = Routes.TipResult.route) {
                 TipTimeResultScreen(
                     tipTimeViewModel = tipTimeViewModel,
-                    onBackButtonClicked = { navController.navigate(Routes.Start.route) {popUpTo(0)} },
+                    onBackButtonClicked = {
+                        navController.navigate(Routes.Start.route) {popUpTo(0)}
+                        tipTimeViewModel.resetTip() //ADD THIS
+                        },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp)

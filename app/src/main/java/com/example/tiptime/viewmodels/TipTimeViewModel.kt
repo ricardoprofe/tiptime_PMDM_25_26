@@ -123,6 +123,13 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
+    //ADD THIS FUNCTION
+    fun loadOrKeepTip(tipId: Int) {
+        if (currentTipId == null || currentTipId == 0) { // Assuming 0 is not a valid ID
+            loadTipById(tipId)
+        }
+    }
+
     fun saveTipCalculation() {
         // Launch a coroutine in the ViewModel's scope
         viewModelScope.launch {
@@ -151,6 +158,7 @@ class TipTimeViewModel(application: Application): AndroidViewModel(application) 
         )
         viewModelScope.launch {
             tipRepository.deleteTip(tip)
+            resetTip() //ADD THIS
         }
     }
 
