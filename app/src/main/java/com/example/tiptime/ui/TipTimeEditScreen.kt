@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.R
 import com.example.tiptime.viewmodels.TipTimeViewModel
 
@@ -31,7 +32,7 @@ fun TipTimeEditScreen(
     onNextButtonClicked: () -> Unit,
     backNavigation: () -> Unit,
     modifier: Modifier = Modifier,
-    tipTimeViewModel: TipTimeViewModel,
+    tipTimeViewModel: TipTimeViewModel = viewModel(),
     tipId: Int? = 0
 ) {
     // Use LaunchedEffect to load the tip when the screen is first displayed
@@ -39,7 +40,7 @@ fun TipTimeEditScreen(
         if (tipId != null && tipId != 0) { // Assuming 0 is not a valid ID
             tipTimeViewModel.loadTipById(tipId)
         } else {
-            //tipTimeViewModel.resetTip() // Optional: Clear fields for a new tip
+            tipTimeViewModel.resetTip() // Optional: Clear fields for a new tip
         }
     }
 

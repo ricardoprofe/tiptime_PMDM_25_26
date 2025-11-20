@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.R
 import com.example.tiptime.viewmodels.TipTimeViewModel
 
@@ -26,7 +27,7 @@ import com.example.tiptime.viewmodels.TipTimeViewModel
 fun TipTimeResultScreen(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    tipTimeViewModel: TipTimeViewModel,
+    tipTimeViewModel: TipTimeViewModel = viewModel(),
 ) {
     val tipTimeUiState by tipTimeViewModel.uiState.collectAsState()
 
@@ -58,4 +59,7 @@ fun TipTimeResultScreen(
 @Preview
 @Composable
 fun ResultPreview(){
+    TipTimeResultScreen(
+        onBackButtonClicked = {  }
+    )
 }
